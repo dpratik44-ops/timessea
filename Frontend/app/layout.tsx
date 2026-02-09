@@ -2,6 +2,7 @@ import React from "react"
 import type { Metadata, Viewport } from "next"
 import { Inter, Source_Serif_4 } from "next/font/google"
 import { ThemeProvider } from "@/components/theme-provider"
+import { AnalyticsTracker } from "@/components/AnalyticsTracker"
 
 import "./globals.css"
 
@@ -40,6 +41,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
+          <AnalyticsTracker />
           {children}
         </ThemeProvider>
       </body>

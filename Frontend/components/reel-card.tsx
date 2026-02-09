@@ -15,6 +15,7 @@ import {
 } from "lucide-react"
 import type { Article } from "@/lib/data"
 import { cn } from "@/lib/utils"
+import { analytics, AnalyticsEventType } from "@/lib/analytics"
 
 interface ReelCardProps {
   article: Article
@@ -167,6 +168,13 @@ export function ReelCard({
         <Link
           href={`/article/${article.id}`}
           className="mt-2 text-center rounded-2xl bg-foreground p-4 font-bold text-sm text-background shadow-lg shadow-foreground/20 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2"
+          onClick={() => {
+            analytics.track({
+              event: AnalyticsEventType.POST_VIEW,
+              post_id: article.id,
+              metadata: { source: 'reel_card' }
+            });
+          }}
         >
           Read Full Story
           <ArrowRight className="h-4 w-4" />
@@ -178,7 +186,14 @@ export function ReelCard({
           <div className="pointer-events-auto flex flex-col gap-4">
             <button
               type="button"
-              onClick={() => onToggleLike(article.id)}
+              onClick={() => {
+                onToggleLike(article.id);
+                analytics.track({
+                  event: isLiked ? AnalyticsEventType.UNLIKE : AnalyticsEventType.LIKE,
+                  post_id: article.id,
+                  metadata: { source: 'reel_card' }
+                });
+              }}
               className="flex flex-col items-center gap-1 group"
               aria-label={isLiked ? "Unlike" : "Like"}
             >
@@ -207,7 +222,16 @@ export function ReelCard({
 
              <button
               type="button"
-               onClick={() => onToggleSave(article.id)}
+              onClick={() => {
+                onToggleSave(article.id);
+                if (!isSaved) {
+                  analytics.track({
+                    event: AnalyticsEventType.SAVE,
+                    post_id: article.id,
+                    metadata: { source: 'reel_card' }
+                  });
+                }
+              }}
                className="flex flex-col items-center gap-1 group"
             >
               <div className={cn(
